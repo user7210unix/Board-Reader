@@ -1,13 +1,13 @@
 <div align="center">
 
-![logo](newspaper-pepe-pepe-newspaper.png)
+<img src="img/newspaper-pepe-pepe-newspaper.png" alt="pepe-newspaper" width="150px">
 
-# The /pol/ Courier
+# The /pol/ Board Reader 
 
 A calm, newspaper-style reader for 4chan's /pol/ board.  
 No accounts. No tracking. One HTML file.
 
-![preview](preview.png)
+![preview](img/preview.png)
 
 </div>
 
@@ -16,10 +16,6 @@ No accounts. No tracking. One HTML file.
 ## What it is
 
 A single self-contained HTML file that reads the 4chan public API and presents /pol/ as a clean broadsheet newspaper. Split-pane layout: thread list on the left, thread content on the right. Designed to be readable, printable, and quiet.
-
-## Usage
-
-Download `pol-reader.html` and open it in any modern browser. No server, no install, no dependencies beyond an internet connection.
 
 ## Features
 
