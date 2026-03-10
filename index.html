@@ -476,8 +476,7 @@ code{font-family:'Courier Prime',monospace;font-size:0.9em;}
    PROXY POOL
    codetabs requires trailing slash: /v1/proxy/?quest=
    allorigins as fallback.
-   We try each in order, move to next on 429 / failure.
-================================================================= */
+  */
 const PROXIES = [
   url => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
