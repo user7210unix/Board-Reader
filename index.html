@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politically Incorrect / The Board Reader</title>
+<link rel="dns-prefetch" href="https://a.4cdn.org">
+<link rel="dns-prefetch" href="https://i.4cdn.org">
+<link rel="preconnect" href="https://a.4cdn.org">
+<link rel="preconnect" href="https://i.4cdn.org">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --bg:      #f2ede2;
+  --paper:   #faf7f0;
+  --panel:   #f5f0e6;
+  --ink:     #18180e;
+  --ink-mid: #3a3a2a;
+  --ink-dim: #7a7860;
+  --rule:    #ccc4ae;
+  --link:    #00008b;
+  --link-v:  #4a0070;
+  --red:     #7a0000;
+  --green:   #3a5a3a;
+  --lw:      340px;
+}
+.dark {
+  --bg:      #0e0e0c;
+  --paper:   #161610;
+  --panel:   #131310;
+  --ink:     #d4d0c0;
+  --ink-mid: #9a9880;
+  --ink-dim: #555548;
+  --rule:    #2c2c24;
+  --link:    #7a9cbb;
+  --link-v:  #9a7abb;
+  --red:     #bb4444;
+  --green:   #5a8a5a;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:'IM Fell English',Georgia,serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.5;
+}
+a{color:var(--link);text-decoration:underline;}
+a:visited{color:var(--link-v);}
+a:hover{text-decoration:none;}
+
+/* LAYOUT */
+#shell{display:flex;flex-direction:column;height:100vh;}
+
+/* MASTHEAD */
+#masthead{
+  flex-shrink:0;
+  background:var(--paper);
+  border-bottom:3px double var(--ink);
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  padding:7px 18px 6px;
+  gap:16px;
+}
+#masthead h1{
+  font-family:'IM Fell English SC',serif;
+  font-size:1.55rem;
+  font-weight:normal;
+  letter-spacing:0.04em;
+  line-height:1;
+  white-space:nowrap;
+}
+#masthead .sub{
+  font-family:'Courier Prime',monospace;
+  font-size:0.64rem;
+  color:var(--ink-dim);
+  letter-spacing:0.11em;
+  text-transform:uppercase;
+  flex:1;
+  padding-left:12px;
+  border-left:1px solid var(--rule);
+  margin-left:4px;
+}
+#masthead .hd-right{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.hd-btn{
+  font-family:'Courier Prime',monospace;
+  font-size:0.64rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  background:none;
+  border:1px solid var(--ink-dim);
+  color:var(--ink);
+  padding:2px 9px;
+  cursor:pointer;
+}
+.hd-btn:hover,.hd-btn.active{background:var(--ink);color:var(--paper);}
+
+/* SPLIT */
+#body{display:flex;flex:1;min-height:0;overflow:hidden;}
+
+/* LEFT */
+#left{
+  width:var(--lw);
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  border-right:2px solid var(--ink);
+  background:var(--panel);
+  overflow:hidden;
+}
+#left-toolbar{
+  flex-shrink:0;
+  padding:5px 10px;
+  border-bottom:1px solid var(--rule);
+  display:flex;
+  gap:5px;
+  align-items:center;
+  background:var(--paper);
+}
+#left-toolbar input,#left-toolbar select{
+  font-family:'Courier Prime',monospace;
+  font-size:0.65rem;
+  background:var(--bg);
+  color:var(--ink);
+  border:1px solid var(--rule);
+  padding:2px 5px;
+}
+#left-toolbar input{flex:1;min-width:0;}
+#left-toolbar select{letter-spacing:0.04em;}
+#thread-list{flex:1;overflow-y:auto;overflow-x:hidden;}
+#thread-list::-webkit-scrollbar{width:4px;}
+#thread-list::-webkit-scrollbar-thumb{background:var(--rule);}
+#left-footer{
+  flex-shrink:0;
+  padding:4px 10px;
+  border-top:1px solid var(--rule);
+  font-family:'Courier Prime',monospace;
+  font-size:0.6rem;
+  color:var(--ink-dim);
+  background:var(--paper);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+}
+#left-footer button{
+  font-family:'Courier Prime',monospace;
+  font-size:0.6rem;
+  background:none;
+  border:1px solid var(--rule);
+  color:var(--ink-dim);
+  padding:1px 7px;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+}
+#left-footer button:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+/* RIGHT */
+#right{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);}
+#right::-webkit-scrollbar{width:5px;}
+#right::-webkit-scrollbar-thumb{background:var(--rule);}
+#right-inner{max-width:760px;margin:0 auto;padding:20px 24px 40px;}
+
+/* EMPTY STATE */
+#empty-state{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:60vh;
+  font-family:'Courier Prime',monospace;
+  font-size:0.72rem;
+  color:var(--ink-dim);
+  text-align:center;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  line-height:2.4;
+}
+#empty-state .big{
+  font-family:'IM Fell English SC',serif;
+  font-size:2.1rem;
+  color:var(--rule);
+  font-weight:normal;
+  letter-spacing:0.06em;
+  display:block;
+  margin-bottom:12px;
+  text-transform:none;
+}
+
+/* THREAD ROWS */
+.t-row{
+  display:grid;
+  grid-template-columns:26px 1fr 38px;
+  gap:5px;
+  align-items:start;
+  padding:7px 10px;
+  border-bottom:1px solid var(--rule);
+  cursor:pointer;
+}
+.t-row:hover{background:var(--bg);}
+.t-row.active{background:var(--paper);border-left:2px solid var(--ink);padding-left:8px;}
+.t-n{
+  font-family:'Courier Prime',monospace;
+  font-size:0.57rem;
+  color:var(--ink-dim);
+  padding-top:2px;
+  text-align:right;
+  line-height:1.4;
+}
+.t-replies{color:var(--red);font-size:0.55rem;}
+.t-head{
+  font-family:'IM Fell English SC',serif;
+  font-size:0.87rem;
+  color:var(--ink);
+  line-height:1.25;
+  display:block;
+}
+.t-row.is-news .t-head{
+  font-family:'IM Fell English',serif;
+  font-style:italic;
+  font-size:0.9rem;
+}
+.t-row.is-general .t-head{
+  color:var(--ink-dim);
+  font-size:0.78rem;
+  font-family:'Courier Prime',monospace;
+}
+.t-snip{
+  font-size:0.7rem;
+  color:var(--ink-mid);
+  margin-top:1px;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.t-meta{
+  font-family:'Courier Prime',monospace;
+  font-size:0.56rem;
+  color:var(--ink-dim);
+  text-align:right;
+  padding-top:2px;
+  line-height:1.7;
+  white-space:nowrap;
+}
+#list-msg{
+  font-family:'Courier Prime',monospace;
+  font-size:0.72rem;
+  color:var(--ink-dim);
+  text-align:center;
+  padding:24px 10px;
+  letter-spacing:0.08em;
+}
+#list-err{
+  font-family:'Courier Prime',monospace;
+  font-size:0.68rem;
+  color:var(--red);
+  padding:12px 10px;
+  border:1px solid var(--red);
+  margin:10px;
+  line-height:1.9;
+  display:none;
+}
+
+/* THREAD */
+#thread-loading{
+  font-family:'Courier Prime',monospace;
+  font-size:0.78rem;
+  color:var(--ink-dim);
+  text-align:center;
+  padding:40px 0;
+  display:none;
+  letter-spacing:0.1em;
+}
+.thread-hd{
+  border-top:none;
+  border-bottom:1px solid var(--ink);
+  padding:10px 0 8px;
+  margin-bottom:18px;
+}
+.thread-hd h2{
+  font-family:'IM Fell English',serif;
+  font-size:1.5rem;
+  font-weight:normal;
+  line-height:1.25;
+  font-style:italic;
+}
+.thread-hd.is-general h2{font-style:normal;font-family:'IM Fell English SC',serif;font-size:1.3rem;}
+.thread-byline{
+  font-family:'Courier Prime',monospace;
+  font-size:0.63rem;
+  color:var(--ink-dim);
+  margin-top:4px;
+  letter-spacing:0.04em;
+}
+.post{
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--rule);
+}
+.post.highlighted{outline:2px solid var(--link);padding:5px;}
+.reply-post{margin-left:20px;padding-left:10px;border-left:1px solid var(--rule);}
+.post-hdr{
+  font-family:'Courier Prime',monospace;
+  font-size:0.62rem;
+  color:var(--ink-dim);
+  margin-bottom:5px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:baseline;
+}
+.p-num a{color:var(--red);font-weight:bold;text-decoration:none;}
+.p-num a:hover{text-decoration:underline;}
+.p-trip{color:var(--ink-mid);font-style:italic;}
+.post-body{font-size:0.9rem;line-height:1.65;max-width:640px;}
+.post-body .gt{color:var(--green);font-style:italic;}
+.dark .post-body .gt{color:#6aaa6a;}
+.post-body .ql{color:var(--link);text-decoration:none;font-family:'Courier Prime',monospace;font-size:0.82em;}
+.post-body .ql:hover{text-decoration:underline;}
+.post-img{margin:6px 0 8px;}
+.post-img img{max-width:800px;max-height:620px;display:block;border:1px solid var(--rule);cursor:pointer;}
+.post-img img:hover{border-color:var(--ink-dim);}
+.img-cap{font-family:'Courier Prime',monospace;font-size:0.57rem;color:var(--ink-dim);margin-top:2px;display:none;}
+.img-cap a{color:var(--ink-dim);}
+.replies-div{
+  font-family:'Courier Prime',monospace;
+  font-size:0.62rem;
+  color:var(--ink-dim);
+  letter-spacing:0.12em;
+  margin:6px 0 10px;
+  padding-bottom:4px;
+  border-bottom:1px solid var(--rule);
+  text-transform:uppercase;
+}
+#load-more{text-align:center;padding:12px 0;display:none;}
+#load-more button{
+  font-family:'Courier Prime',monospace;
+  font-size:0.7rem;
+  background:none;
+  border:1px solid var(--ink);
+  color:var(--ink);
+  padding:4px 18px;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+}
+#load-more button:hover{background:var(--ink);color:var(--paper);}
+
+/* OPTIONS */
+#options-panel{display:none;padding:22px 0;}
+#options-panel h3{
+  font-family:'IM Fell English SC',serif;
+  font-size:1.05rem;
+  font-weight:normal;
+  border-bottom:1px solid var(--rule);
+  padding-bottom:5px;
+  margin-bottom:12px;
+  margin-top:18px;
+}
+#options-panel h3:first-of-type{margin-top:0;}
+#options-panel label{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  font-family:'Courier Prime',monospace;
+  font-size:0.7rem;
+  margin:8px 0;
+  line-height:1.5;
+  cursor:pointer;
+}
+#options-panel label input[type=checkbox]{margin-top:2px;flex-shrink:0;}
+.filter-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'Courier Prime',monospace;font-size:0.63rem;
+  background:var(--paper);border:1px solid var(--rule);
+  padding:2px 7px;margin:3px 3px 3px 0;
+}
+.filter-tag .del{cursor:pointer;color:var(--red);font-weight:bold;}
+.filter-add{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+.filter-add input,.filter-add select{
+  font-family:'Courier Prime',monospace;font-size:0.67rem;
+  background:var(--bg);color:var(--ink);border:1px solid var(--rule);padding:3px 7px;
+}
+.filter-add input{flex:1;min-width:100px;}
+.filter-add button,.opt-btn{
+  font-family:'Courier Prime',monospace;font-size:0.67rem;
+  background:none;border:1px solid var(--ink-dim);color:var(--ink);
+  padding:3px 10px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;
+}
+.filter-add button:hover,.opt-btn:hover{background:var(--ink);color:var(--paper);}
+.opt-note{
+  font-family:'Courier Prime',monospace;font-size:0.63rem;color:var(--ink-dim);
+  margin-top:6px;line-height:1.7;border-left:2px solid var(--rule);padding-left:8px;
+}
+code{font-family:'Courier Prime',monospace;font-size:0.9em;}
+
+/* PRINT */
+@media print{
+  :root{--bg:#fff;--paper:#fff;--panel:#fff;--ink:#000;--ink-mid:#333;--ink-dim:#666;--rule:#aaa;--link:#000;--red:#000;--green:#000;}
+  html,body{height:auto;overflow:visible;}
+  #shell{height:auto;}
+  #body{display:block;}
+  #left,#masthead .hd-right,#left-toolbar,#left-footer,#empty-state,#thread-loading,#load-more,#options-panel{display:none!important;}
+  #right{overflow:visible;height:auto;}
+  #right-inner{max-width:100%;padding:10px;}
+  .post-img img{max-width:130px;filter:grayscale(100%);}
+  .post{break-inside:avoid;}
+  body{font-size:9.5pt;}
+}
+@media(max-width:680px){
+  :root{--lw:100%;}
+  html,body{height:auto;overflow:auto;}
+  #shell{height:auto;}
+  #body{flex-direction:column;overflow:visible;}
+  #left{width:100%;border-right:none;border-bottom:2px solid var(--ink);max-height:45vh;}
+  #right{height:auto;overflow:visible;}
+}
+</style>
+</head>
+<body>
+<div id="shell">
+
+<div id="masthead">
+  <h1>Politically Incorrect</h1>
+  <span class="sub">The /pol/ Board Reader &mdash; Independent Edition</span>
+  <div class="hd-right">
+    <button class="hd-btn" id="btn-dark" onclick="toggleDark()">Dark</button>
+    <button class="hd-btn" id="btn-opts" onclick="toggleOptions()">Options</button>
+  </div>
+</div>
+
+<div id="body">
+  <div id="left">
+    <div id="left-toolbar">
+      <input id="search-box" type="text" placeholder="Filter headlines...">
+      <select id="sort-sel" onchange="sortThreads(this.value)">
+        <option value="bump">Recent</option>
+        <option value="replies">Replies</option>
+        <option value="images">Images</option>
+      </select>
+    </div>
+    <div id="thread-list">
+      <div id="list-msg">-- Loading --</div>
+      <div id="list-err"></div>
+    </div>
+    <div id="left-footer">
+      <span id="list-count"></span>
+      <button onclick="loadCatalog()">Refresh</button>
+      <button id="btn-more" onclick="loadMoreThreads()" style="display:none">More</button>
+    </div>
+  </div>
+
+  <div id="right">
+    <div id="right-inner">
+      <div id="empty-state">
+        <span class="big">The /pol/ Courier</span>
+        Select a thread from the left column<br>to begin reading
+      </div>
+      <div id="thread-loading">-- Fetching thread --</div>
+      <div id="thread-content"></div>
+      <div id="load-more"><button onclick="loadMorePosts()">Load More Posts</button></div>
+      <div id="options-panel"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+/* =================================================================
+   PROXY POOL
+   codetabs requires trailing slash: /v1/proxy/?quest=
+   allorigins as fallback.
+   We try each in order, move to next on 429 / failure.
+================================================================= */
+const PROXIES = [
+  url => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+];
+let proxyIdx = 0;
+
+async function get(url) {
+  const startProxy = proxyIdx;
+  for (let attempt = 0; attempt < PROXIES.length; attempt++) {
+    const idx = (startProxy + attempt) % PROXIES.length;
+    const proxyUrl = PROXIES[idx](url);
+    try {
+      const res = await fetch(proxyUrl);
+      if (res.status === 429) {
+        // rate limited -- try next proxy
+        proxyIdx = (idx + 1) % PROXIES.length;
+        continue;
+      }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      proxyIdx = idx; // remember the working one
+      return await res.json();
+    } catch(e) {
+      if (attempt === PROXIES.length - 1) {
+        showListErr(
+          'All proxies failed. Error: ' + e.message + '<br>' +
+          'Try: <a href="#" onclick="loadCatalog();return false">Retry</a>'
+        );
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+document.addEventListener('mouseover', e => {
+  const img = e.target.closest('.post-img img');
+  if (!img) return;
+  const full = img.closest('a').href;
+  let p = document.getElementById('img-hover');
+  if (!p) { p = document.createElement('img'); p.id = 'img-hover'; p.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;max-width:600px;max-height:600px;border:1px solid var(--rule);display:none;background:var(--paper)'; document.body.appendChild(p); }
+  p.src = full;
+  p.style.display = 'block';
+});
+document.addEventListener('mousemove', e => {
+  const p = document.getElementById('img-hover');
+  if (p && p.style.display === 'block') { p.style.left = (e.clientX + 16) + 'px'; p.style.top = (e.clientY + 16) + 'px'; }
+});
+document.addEventListener('mouseout', e => {
+  if (e.target.closest('.post-img img')) { const p = document.getElementById('img-hover'); if (p) p.style.display = 'none'; }
+});
+
+/* =================================================================
+   CONFIG
+================================================================= */
+const API     = 'https://a.4cdn.org';
+const IMG_CDN = 'https://i.4cdn.org';
+const BOARD   = 'pol';
+const PER_PAGE    = 60;
+const POST_CHUNK  = 100;
+
+/* =================================================================
+   STATE
+================================================================= */
+let allThreads    = [];
+let displayedCount = 0;
+let currentSort   = 'bump';
+let darkMode      = false;
+let imgObserver   = null;
+let activeNo      = null;
+let allPosts      = [];
+let postsShown    = 0;
+
+let opts = {
+  hideGenerals : true,
+  hideTripfags : false,
+  filters      : [],
+};
+loadOpts();
+
+/* =================================================================
+   LAZY IMG OBSERVER
+================================================================= */
+function initObserver() {
+  if (imgObserver) imgObserver.disconnect();
+  imgObserver = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      const img = en.target;
+      const s = img.getAttribute('data-src');
+      if (s) { img.src = s; img.removeAttribute('data-src'); }
+      imgObserver.unobserve(img);
+    });
+  }, { rootMargin: '200px' });
+  document.querySelectorAll('img[data-src]').forEach(i => imgObserver.observe(i));
+}
+
+/* =================================================================
+   UTILS
+================================================================= */
+function esc(t) { const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
+function strip(h) { const d=document.createElement('div'); d.innerHTML=h||''; return (d.textContent||'').trim(); }
+
+function fmtDate(ts) {
+  const d = new Date(ts*1000);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
+         d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+function fmtSize(b) {
+  if(!b) return '';
+  if(b<1024) return b+' B';
+  if(b<1048576) return (b/1024).toFixed(1)+' KB';
+  return (b/1048576).toFixed(1)+' MB';
+}
+
+function fmt(raw) {
+  if(!raw) return '';
+  return raw
+    .replace(/<br>/g,'\n')
+    .replace(/&gt;/g,'>').replace(/&lt;/g,'<')
+    .replace(/&quot;/g,'"').replace(/&#039;/g,"'").replace(/&amp;/g,'&')
+    .replace(/\n/g,'<br>')
+    .replace(/^>(.+)/gm,'<span class="gt">&gt;$1</span>')
+    .replace(/>>(\d+)/g,'<a href="#post-$1" class="ql" data-pid="$1">&gt;&gt;$1</a>');
+}
+
+function showListErr(msg) {
+  const el = document.getElementById('list-err');
+  el.style.display = msg ? 'block' : 'none';
+  el.innerHTML = msg || '';
+}
+
+/* =================================================================
+   THREAD CLASSIFICATION
+================================================================= */
+const RX_GENERAL  = /\b(general|\/gen\/|containment|qtddtot|larp)\b/i;
+const RX_GEN_DASH = /[-–—]\s*(general|gen)\s*$/i;
+const RX_NEWS     = [
+  /\b(says|said|claims|warns|announces|confirms|denies|demands|threatens|wins|loses|drops|rises|falls|kills|arrested|banned|leaked|exposed|breaks|invades|attacks|launches|passes|rejects|surges|reveals|shooting|bombing|election)\b/i,
+  /^(breaking|report|exclusive|update|developing):/i,
+  /\b(president|government|minister|court|congress|senate|military|police|media|nation|country|state|city)\b/i,
+];
+
+function classify(t) {
+  const sub = strip(t.sub||'');
+  const txt = sub || strip(t.com||'').slice(0,120);
+  if(!txt) return 'plain';
+  if(RX_GENERAL.test(txt) || RX_GEN_DASH.test(txt)) return 'general';
+  const words = txt.trim().split(/\s+/);
+  if(words.length >= 4 && RX_NEWS.some(r=>r.test(txt))) return 'news';
+  return 'plain';
+}
+
+function headline(t) {
+  if(t.sub && strip(t.sub).length > 2) return strip(t.sub);
+  return strip(t.com||'').replace(/\n/g,' ').slice(0,90) || '(no text)';
+}
+
+/* =================================================================
+   FILTER LOGIC
+================================================================= */
+function matchPat(text, pattern) {
+  try {
+    const rm = pattern.match(/^\/(.+)\/([gimsuy]*)$/);
+    if(rm) return new RegExp(rm[1], rm[2]||'i').test(text);
+    return text.toLowerCase().includes(pattern.toLowerCase());
+  } catch(e) {
+    return text.toLowerCase().includes(pattern.toLowerCase());
+  }
+}
+
+function threadOk(t) {
+  if(opts.hideGenerals && classify(t)==='general') return false;
+  if(opts.hideTripfags && t.trip) return false;
+  for(const f of opts.filters) {
+    if(!f.enabled) continue;
+    let hay = '';
+    if(f.type==='subject') hay = strip(t.sub||'') + ' ' + strip(t.com||'');
+    if(f.type==='comment') hay = strip(t.com||'');
+    if(f.type==='name')    hay = t.name||'';
+    if(f.type==='tripcode')hay = t.trip||'';
+    if(matchPat(hay, f.pattern)) return false;
+  }
+  return true;
+}
+
+function postOk(p) {
+  if(opts.hideTripfags && p.trip) return false;
+  for(const f of opts.filters) {
+    if(!f.enabled) continue;
+    if(f.type==='comment' && matchPat(strip(p.com||''), f.pattern)) return false;
+    if(f.type==='name'    && matchPat(p.name||'',       f.pattern)) return false;
+    if(f.type==='tripcode'&& matchPat(p.trip||'',       f.pattern)) return false;
+  }
+  return true;
+}
+
+/* =================================================================
+   CATALOG
+================================================================= */
+async function loadCatalog() {
+  document.getElementById('list-msg').textContent = '-- Loading --';
+  document.getElementById('list-msg').style.display = 'block';
+  showListErr(null);
+  document.querySelectorAll('.t-row').forEach(r=>r.remove());
+
+  const pages = await get(`${API}/${BOARD}/catalog.json`);
+  document.getElementById('list-msg').style.display = 'none';
+  if(!pages) return;
+
+  allThreads = [];
+  pages.forEach(pg => (pg.threads||[]).forEach(t => allThreads.push(t)));
+  displayedCount = 0;
+  renderList();
+}
+
+function getSorted() {
+  const t = [...allThreads];
+  if(currentSort==='replies') t.sort((a,b)=>(b.replies||0)-(a.replies||0));
+  else if(currentSort==='images') t.sort((a,b)=>(b.images||0)-(a.images||0));
+  return t;
+}
+
+function getFiltered() {
+  const q = document.getElementById('search-box').value.trim().toLowerCase();
+  let threads = getSorted();
+  if(q) threads = threads.filter(t =>
+    headline(t).toLowerCase().includes(q) ||
+    strip(t.com||'').toLowerCase().includes(q)
+  );
+  return threads.filter(t => threadOk(t));
+}
+
+function renderList(append=false) {
+  const container = document.getElementById('thread-list');
+  if(!append) {
+    container.querySelectorAll('.t-row').forEach(r=>r.remove());
+    displayedCount = 0;
+  }
+  const threads = getFiltered();
+  const slice   = threads.slice(displayedCount, displayedCount + PER_PAGE);
+  displayedCount += slice.length;
+
+  if(!slice.length && !append) {
+    const msg = document.createElement('div');
+    msg.id = 'no-results';
+    msg.style.cssText = 'font-family:"Courier Prime",monospace;font-size:0.68rem;color:var(--ink-dim);text-align:center;padding:20px 10px';
+    msg.textContent = 'No threads match.';
+    container.appendChild(msg);
+  }
+
+  slice.forEach((t, i) => {
+    const kind    = classify(t);
+    const hl      = headline(t);
+    const snip    = t.sub ? strip(t.com||'').replace(/\n/g,' ').slice(0,55) : '';
+    const n       = displayedCount - slice.length + i + 1;
+
+    const row = document.createElement('div');
+    row.className = 't-row' + (kind==='news'?' is-news':kind==='general'?' is-general':'');
+    row.dataset.no = t.no;
+    // NO hover prefetch -- was causing 429 spam
+    row.onclick = () => openThread(t.no, hl, kind);
+
+    row.innerHTML =
+      `<div class="t-n">${n}<br><span class="t-replies">${t.replies||0}</span></div>` +
+      `<div>` +
+        `<span class="t-head">${esc(hl)}</span>` +
+        (snip ? `<div class="t-snip">${esc(snip)}</div>` : '') +
+      `</div>` +
+      `<div class="t-meta">${t.images||0}i<br>${fmtDate(t.time).split(' ')[0]}</div>`;
+
+    container.appendChild(row);
+  });
+
+  document.getElementById('list-count').textContent = `${threads.length} threads`;
+  document.getElementById('btn-more').style.display = displayedCount < threads.length ? 'inline-block' : 'none';
+}
+
+function loadMoreThreads() { renderList(true); }
+function sortThreads(val) { currentSort=val; renderList(false); }
+
+document.getElementById('search-box').addEventListener('input', () => {
+  document.getElementById('no-results') && document.getElementById('no-results').remove();
+  renderList(false);
+});
+
+/* =================================================================
+   OPEN THREAD
+================================================================= */
+async function openThread(threadNo, title, kind) {
+  document.querySelectorAll('.t-row').forEach(r=>r.classList.remove('active'));
+  const row = document.querySelector(`.t-row[data-no="${threadNo}"]`);
+  if(row) row.classList.add('active');
+
+  activeNo = threadNo;
+  allPosts = [];
+  postsShown = 0;
+
+  document.getElementById('options-panel').style.display = 'none';
+  document.getElementById('btn-opts').classList.remove('active');
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('thread-content').innerHTML = '';
+  document.getElementById('load-more').style.display = 'none';
+  document.getElementById('thread-loading').style.display = 'block';
+  document.getElementById('right').scrollTop = 0;
+
+  const data = await get(`${API}/${BOARD}/thread/${threadNo}.json`);
+  document.getElementById('thread-loading').style.display = 'none';
+  if(!data) return;
+
+  allPosts = (data.posts||[]).filter(p => postOk(p));
+  postsShown = 0;
+  renderThreadHead(title, kind, allPosts[0], allPosts.length);
+  renderPosts(POST_CHUNK);
+}
+
+function renderThreadHead(title, kind, op, total) {
+  const c = document.getElementById('thread-content');
+  c.innerHTML = '';
+  const hd = document.createElement('div');
+  hd.className = 'thread-hd' + (kind==='general'?' is-general':'');
+  hd.innerHTML =
+    `<h2>${esc(title)}</h2>` +
+    `<div class="thread-byline">` +
+    (op ? `${op.no} &mdash; ${fmtDate(op.time)} &mdash; ` : '') +
+    `${total} posts</div>`;
+  c.appendChild(hd);
+}
+
+function renderPosts(count) {
+  const c     = document.getElementById('thread-content');
+  const chunk = allPosts.slice(postsShown, postsShown + count);
+  const first = postsShown === 0;
+
+  chunk.forEach((p, idx) => {
+    if(first && idx === 1) {
+      const div = document.createElement('div');
+      div.className = 'replies-div';
+      div.textContent = `${allPosts.length - 1} replies`;
+      c.appendChild(div);
+    }
+    const el = document.createElement('div');
+    el.className = 'post ' + (postsShown + idx === 0 ? 'op-post' : 'reply-post');
+    el.id = 'post-' + p.no;
+
+    let h =
+      `<div class="post-hdr">` +
+        `<span class="p-num"><a href="#post-${p.no}" data-pid="${p.no}">${p.no}</a></span>` +
+        (p.trip ? `<span class="p-trip">${esc(p.trip)}</span>` : '') +
+      `</div>`;
+
+    if(p.tim && p.ext) {
+      const thumb = `${IMG_CDN}/${BOARD}/${p.tim}s.jpg`;
+      const full  = `${IMG_CDN}/${BOARD}/${p.tim}${p.ext}`;
+      const info  = [fmtSize(p.fsize), p.w&&p.h?`${p.w}x${p.h}`:null].filter(Boolean).join(', ');
+      h +=
+        `<div class="post-img">` +
+          `<a href="${full}" onclick="expandImg(this.href,event)">` +
+            `<img data-src="${thumb}" alt="" onerror="this.closest('.post-img').style.display='none'">` +
+          `</a>` +
+          `<div class="img-cap"><a href="${full}" target="_blank">${esc((p.filename||'')+p.ext)}</a>${info?` (${info})`:''}</div>` +
+        `</div>`;
+    }
+
+    h += `<div class="post-body">${fmt(p.com||'')}</div>`;
+    el.innerHTML = h;
+
+    el.querySelectorAll('a[data-pid]').forEach(a => {
+      const pid = a.getAttribute('data-pid');
+      a.onclick = e => { e.preventDefault(); highlightPost(pid); };
+    });
+
+    c.appendChild(el);
+    postsShown++;
+  });
+
+  initObserver();
+  document.getElementById('load-more').style.display = postsShown < allPosts.length ? 'block' : 'none';
+}
+
+function loadMorePosts() { renderPosts(POST_CHUNK); }
+
+function highlightPost(pid) {
+  const el = document.getElementById('post-'+pid);
+  if(!el) return;
+  document.querySelectorAll('.post.highlighted').forEach(p=>p.classList.remove('highlighted'));
+  el.classList.add('highlighted');
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>el.classList.remove('highlighted'), 2200);
+}
+
+function expandImg(src, e) {
+  e.preventDefault();
+  let ov = document.getElementById('img-overlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'img-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:99999;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+    ov.onclick = () => ov.style.display = 'none';
+    const img = document.createElement('img');
+    img.id = 'img-overlay-img';
+    img.style.cssText = 'max-width:95vw;max-height:95vh;object-fit:contain';
+    ov.appendChild(img);
+    document.body.appendChild(ov);
+  }
+  document.getElementById('img-overlay-img').src = src;
+  ov.style.display = 'flex';
+}
+
+/* =================================================================
+   OPTIONS
+================================================================= */
+function toggleOptions() {
+  const panel = document.getElementById('options-panel');
+  const btn   = document.getElementById('btn-opts');
+  const open  = panel.style.display === 'block';
+  if(open) {
+    panel.style.display = 'none';
+    btn.classList.remove('active');
+    if(activeNo) document.getElementById('thread-content').style.display='';
+    else document.getElementById('empty-state').style.display='flex';
+  } else {
+    document.getElementById('empty-state').style.display='none';
+    document.getElementById('thread-content').style.display='none';
+    panel.style.display='block';
+    btn.classList.add('active');
+    renderOpts();
+  }
+}
+
+function renderOpts() {
+  document.getElementById('options-panel').innerHTML = `
+    <h3>Display Filters</h3>
+    <label>
+      <input type="checkbox" ${opts.hideGenerals?'checked':''} onchange="setOpt('hideGenerals',this.checked)">
+      Hide General threads &mdash; recurring generals, /gen/, containment
+    </label>
+    <label>
+      <input type="checkbox" ${opts.hideTripfags?'checked':''} onchange="setOpt('hideTripfags',this.checked)">
+      Hide all Tripfags &mdash; threads and posts with any tripcode
+    </label>
+
+    <h3>Custom Filters</h3>
+    <div class="opt-note">
+      Plain text is case-insensitive &mdash; <code>porn</code> matches Porn, PORN, etc.<br>
+      Use <code>/pattern/flags</code> for regex &mdash; e.g. <code>/^!/</code> on Tripcode to catch all tripcodes.<br>
+      Applied to both catalog and open threads.
+    </div>
+    <div id="f-tags">${renderTags()}</div>
+    <div class="filter-add">
+      <select id="f-type">
+        <option value="subject">Subject</option>
+        <option value="comment">Comment</option>
+        <option value="name">Name</option>
+        <option value="tripcode">Tripcode</option>
+      </select>
+      <input id="f-pat" type="text" placeholder="pattern...">
+      <button onclick="addFilter()">Add</button>
+    </div>
+
+    <h3>Actions</h3>
+    <button class="opt-btn" onclick="window.print()">Print current thread</button>
+  `;
+}
+
+function renderTags() {
+  if(!opts.filters.length) return '<div style="font-family:\'Courier Prime\',monospace;font-size:0.63rem;color:var(--ink-dim);padding:6px 0">No custom filters.</div>';
+  return opts.filters.map((f,i)=>
+    `<span class="filter-tag">
+      <input type="checkbox" ${f.enabled?'checked':''} onchange="toggleFilter(${i},this.checked)">
+      <b>${f.type}</b>: ${esc(f.pattern)}
+      <span class="del" onclick="removeFilter(${i})">&times;</span>
+    </span>`
+  ).join('');
+}
+
+function addFilter() {
+  const type    = document.getElementById('f-type').value;
+  const pattern = document.getElementById('f-pat').value.trim();
+  if(!pattern) return;
+  opts.filters.push({type, pattern, enabled:true});
+  saveOpts();
+  document.getElementById('f-pat').value = '';
+  document.getElementById('f-tags').innerHTML = renderTags();
+  renderList(false);
+}
+function removeFilter(i) {
+  opts.filters.splice(i,1); saveOpts();
+  document.getElementById('f-tags').innerHTML = renderTags();
+  renderList(false);
+}
+function toggleFilter(i,val) {
+  opts.filters[i].enabled=val; saveOpts(); renderList(false);
+}
+function setOpt(k,v) { opts[k]=v; saveOpts(); renderList(false); }
+
+function saveOpts() { try{localStorage.setItem('polr_opts',JSON.stringify(opts));}catch(e){} }
+function loadOpts() { try{const s=localStorage.getItem('polr_opts');if(s){const o=JSON.parse(s);Object.assign(opts,o);}}catch(e){} }
+
+/* =================================================================
+   DARK MODE
+================================================================= */
+function toggleDark() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('dark', darkMode);
+  document.getElementById('btn-dark').textContent = darkMode ? 'Light' : 'Dark';
+  try{localStorage.setItem('polr_dark',darkMode?'1':'0');}catch(e){}
+}
+
+/* =================================================================
+   INIT
+================================================================= */
+try{
+  if(localStorage.getItem('polr_dark')==='1'){
+    darkMode=true;
+    document.body.classList.add('dark');
+    document.getElementById('btn-dark').textContent='Light';
+  }
+}catch(e){}
+
+loadCatalog();
+</script>
+</body>
+</html>
